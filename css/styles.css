@@ -1,0 +1,39 @@
+*, *::before, *::after {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+@media (max-width: 767.98px) {
+	.hero-section {
+		padding: 2rem 0;
+	}
+	.why-choose-us-section h2 {
+		font-size: 1.5rem;
+	}
+	.card {
+		margin-bottom: 1.5rem;
+	}
+	.navbar-nav {
+		text-align: center;
+	}
+	.footer .navbar-text {
+		font-size: 0.95rem;
+	}
+}
+/* Card Hover Effects */
+.card {
+	transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+	box-shadow: 0 8px 24px rgba(0, 86, 179, 0.2), 0 1.5px 6px rgba(0,0,0,0.10);
+}
+/* Hero Section Styles */
+.hero-section {
+	background-color: #0056b3;
+	color: #fff;
+	padding: 4rem 0;
+	text-align: center;
+}
+
+
