@@ -1,3 +1,31 @@
+/* Green border and text for Home Insurance */
+.home-insurance-card {
+	border: 2px solid #28a745 !important;
+}
+.green-card .card-title,
+.green-card div[style*="font-size"] {
+	color: #28a745;
+}
+
+/* Red border and text for Life Insurance */
+.life-insurance-card {
+	border: 2px solid #dc3545 !important;
+}
+.red-card .card-title,
+.red-card div[style*="font-size"] {
+	color: #dc3545;
+}
+/* Blue border and clickable effect for Auto Insurance card */
+.auto-insurance-card {
+	border: 2px solid #007bff !important;
+	cursor: pointer;
+	transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.auto-insurance-card:hover {
+	box-shadow: 0 0 0 4px rgba(0,123,255,0.15);
+	border-color: #0056b3 !important;
+}
 *, *::before, *::after {
 box-sizing: border-box;
 margin: 0;
@@ -33,6 +61,15 @@ padding: 0;
 	background-color: #0056b3;
 	color: #fff;
 	padding: 4rem 0;
+	text-align: center;
+}
+
+/* Center the content of .container.mt-5 on the quote page */
+.container.mt-5 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 	text-align: center;
 }
 
