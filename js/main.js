@@ -1,3 +1,6 @@
+
+// ...existing code for anchor smooth scroll and nav highlighting...
+
 document.querySelectorAll('a[href^="#"]').forEach(function(anchor) 
 {
  anchor.addEventListener('click', function(e) {

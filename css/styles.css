@@ -1,4 +1,26 @@
+header .navbar .navbar-brand, header .navbar .nav-link, nav.navbar .navbar-brand, nav.navbar .nav-link {
+	color: #ffffff !important;
+}
+/* Hamburger menu (navbar-toggler-icon) color for dark header */
+.navbar-toggler {
+	border-color: #ffffff !important;
+}
+.navbar-toggler-icon {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+/* Header and Footer Theming */
+header, header .navbar, nav.navbar {
+	background-color: #1a1446 !important;
+	color: #ffffff !important;
+}
+
+footer, footer .navbar-text, footer .navbar, footer .container, footer span {
+	background-color: #1a1446 !important;
+	color: #f8f9fa !important;
+}
 /* Green border and text for Home Insurance */
+
+
 .home-insurance-card {
 	border: 2px solid #28a745 !important;
 }
@@ -7,7 +29,10 @@
 	color: #28a745;
 }
 
+
 /* Red border and text for Life Insurance */
+
+
 .life-insurance-card {
 	border: 2px solid #dc3545 !important;
 }
@@ -15,17 +40,35 @@
 .red-card div[style*="font-size"] {
 	color: #dc3545;
 }
+
 /* Blue border and clickable effect for Auto Insurance card */
+
+
 .auto-insurance-card {
 	border: 2px solid #007bff !important;
 	cursor: pointer;
 	transition: box-shadow 0.2s, border-color 0.2s;
+}
+.blue-card .card-title,
+.blue-card div[style*="font-size"] {
+    color: #007bff;
 }
 
 .auto-insurance-card:hover {
 	box-shadow: 0 0 0 4px rgba(0,123,255,0.15);
 	border-color: #0056b3 !important;
 }
+
+.home-insurance-card:hover {
+	box-shadow: 0 0 0 4px rgba(7, 82, 25, 0.15);
+	border-color: #0e5818 !important;
+}
+
+.life-insurance-card:hover {
+	box-shadow: 0 0 0 4px rgba(88, 24, 7, 0.15);
+	border-color: #721b06 !important;
+}
+
 *, *::before, *::after {
 box-sizing: border-box;
 margin: 0;
@@ -57,12 +100,15 @@ padding: 0;
 	box-shadow: 0 8px 24px rgba(0, 86, 179, 0.2), 0 1.5px 6px rgba(0,0,0,0.10);
 }
 /* Hero Section Styles */
+
+/*
 .hero-section {
 	background-color: #0056b3;
 	color: #fff;
 	padding: 4rem 0;
 	text-align: center;
 }
+*/
 
 /* Center the content of .container.mt-5 on the quote page */
 .container.mt-5 {
