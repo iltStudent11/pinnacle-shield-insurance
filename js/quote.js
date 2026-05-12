@@ -85,12 +85,22 @@ document.addEventListener('DOMContentLoaded', function () {
 				constructionType.setCustomValidity('Invalid');
 			}
 			// Validate Coverage Level (radio)
+			var coverageGroup = document.getElementById('coverageLevelGroup');
 			var coverageSelected = false;
 			for (var i = 0; i < coverageRadios.length; i++) {
 				if (coverageRadios[i].checked) coverageSelected = true;
 			}
+			var feedback = coverageGroup ? coverageGroup.querySelector('.invalid-feedback') : null;
 			if (!coverageSelected && coverageRadios.length > 0) {
 				coverageRadios[0].setCustomValidity('Invalid');
+				if (coverageGroup) coverageGroup.classList.add('is-invalid');
+				if (feedback) { feedback.classList.remove('d-none'); feedback.classList.add('d-block'); }
+			} else if (coverageRadios.length > 0) {
+				for (var i = 0; i < coverageRadios.length; i++) {
+					coverageRadios[i].classList.remove('is-invalid');
+				}
+				if (coverageGroup) coverageGroup.classList.remove('is-invalid');
+				if (feedback) { feedback.classList.remove('d-block'); feedback.classList.add('d-none'); }
 			}
 			if (!homeForm.checkValidity()) {
 				event.preventDefault();
@@ -158,14 +168,22 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 			// Validate Coverage Level (radio)
 			var coverageRadios = document.getElementsByName('coverageLevel');
+			var coverageGroup = document.getElementById('coverageLevelGroup');
 			var coverageSelected = false;
 			for (var i = 0; i < coverageRadios.length; i++) {
 				if (coverageRadios[i].checked) coverageSelected = true;
 			}
-			if (!coverageSelected) {
+			var feedback = coverageGroup ? coverageGroup.querySelector('.invalid-feedback') : null;
+			if (!coverageSelected && coverageRadios.length > 0) {
 				coverageRadios[0].setCustomValidity('Invalid');
-			} else {
-				coverageRadios[0].setCustomValidity('');
+				if (coverageGroup) coverageGroup.classList.add('is-invalid');
+				if (feedback) { feedback.classList.remove('d-none'); feedback.classList.add('d-block'); }
+			} else if (coverageRadios.length > 0) {
+				for (var i = 0; i < coverageRadios.length; i++) {
+					coverageRadios[i].classList.remove('is-invalid');
+				}
+				if (coverageGroup) coverageGroup.classList.remove('is-invalid');
+				if (feedback) { feedback.classList.remove('d-block'); feedback.classList.add('d-none'); }
 			}
 			// Validate Annual Mileage
 			var annualMileage = document.getElementById('annualMileage');
@@ -222,10 +240,15 @@ document.addEventListener('DOMContentLoaded', function () {
 			for (var i = 0; i < smokerRadios.length; i++) {
 				if (smokerRadios[i].checked) smokerSelected = true;
 			}
-			if (!smokerSelected) {
+			if (!smokerSelected && smokerRadios.length > 0) {
 				smokerRadios[0].setCustomValidity('Invalid');
-			} else {
-				smokerRadios[0].setCustomValidity('');
+				for (var i = 0; i < smokerRadios.length; i++) {
+					smokerRadios[i].classList.add('is-invalid');
+				}
+			} else if (smokerRadios.length > 0) {
+				for (var i = 0; i < smokerRadios.length; i++) {
+					smokerRadios[i].classList.remove('is-invalid');
+				}
 			}
 			// Validate Coverage Amount
 			var coverageAmount = document.getElementById('lifeCoverageAmount');
@@ -243,14 +266,22 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 			// Validate Coverage Level (radio)
 			var coverageRadios = document.getElementsByName('lifeCoverageLevel');
+			var coverageGroup = document.getElementById('coverageLevelGroup');
 			var coverageSelected = false;
 			for (var i = 0; i < coverageRadios.length; i++) {
 				if (coverageRadios[i].checked) coverageSelected = true;
 			}
-			if (!coverageSelected) {
+			var feedback = coverageGroup ? coverageGroup.querySelector('.invalid-feedback') : null;
+			if (!coverageSelected && coverageRadios.length > 0) {
 				coverageRadios[0].setCustomValidity('Invalid');
-			} else {
-				coverageRadios[0].setCustomValidity('');
+				if (coverageGroup) coverageGroup.classList.add('is-invalid');
+				if (feedback) { feedback.classList.remove('d-none'); feedback.classList.add('d-block'); }
+			} else if (coverageRadios.length > 0) {
+				for (var i = 0; i < coverageRadios.length; i++) {
+					coverageRadios[i].classList.remove('is-invalid');
+				}
+				if (coverageGroup) coverageGroup.classList.remove('is-invalid');
+				if (feedback) { feedback.classList.remove('d-block'); feedback.classList.add('d-none'); }
 			}
 			if (!lifeForm.checkValidity()) {
 				event.preventDefault();
