@@ -1,5 +1,108 @@
 // Hide forms on page load and hide other forms when one is shown
 document.addEventListener('DOMContentLoaded', function () {
+				// Utility to hide invalid-feedback and alert for a field
+				function hideFeedbackForField(field) {
+					if (!field) return;
+					// For regular fields
+					var feedback = field.parentElement.querySelector('.invalid-feedback');
+					if (feedback) {
+						feedback.classList.remove('d-block');
+						feedback.classList.add('d-none');
+					}
+					field.classList.remove('is-invalid');
+					field.classList.remove('is-valid');
+					// Remove custom validity so browser validation is updated
+					if (typeof field.setCustomValidity === 'function') {
+						field.setCustomValidity('');
+					}
+					// Also remove is-invalid from parent radio group if present
+					var group = field.closest('.form-radio-group');
+					if (group) group.classList.remove('is-invalid');
+				}
+
+				// For all forms, add event listeners to remove invalid-feedback and alert on input/change
+				var allForms = ['autoInsuranceForm', 'homeInsuranceForm', 'lifeInsuranceForm'];
+				allForms.forEach(function(formId) {
+					var form = document.getElementById(formId);
+					if (!form) return;
+					// For all input, select, textarea
+					var fields = form.querySelectorAll('input, select, textarea');
+					fields.forEach(function(field) {
+						// For text, number, select, etc.
+						field.addEventListener('input', function() {
+							hideFeedbackForField(field);
+						});
+						field.addEventListener('change', function() {
+							hideFeedbackForField(field);
+						});
+					});
+					// For radio groups (including coverage and smoker)
+					var radioGroups = form.querySelectorAll('.form-radio-group');
+					radioGroups.forEach(function(group) {
+						var radios = group.querySelectorAll('input[type="radio"]');
+						radios.forEach(function(radio) {
+							radio.addEventListener('change', function() {
+								// Hide feedback for the group
+								var feedback = group.querySelector('.invalid-feedback');
+								if (feedback) {
+									feedback.classList.remove('d-block');
+									feedback.classList.add('d-none');
+								}
+								radios.forEach(function(r) {
+									r.classList.remove('is-invalid');
+									r.classList.remove('is-valid');
+								});
+								group.classList.remove('is-invalid');
+							});
+						});
+					});
+					// For smoker radio group (life insurance)
+					var smokerRadios = form.querySelectorAll('input[name="lifeSmoker"]');
+					if (smokerRadios.length > 0) {
+						smokerRadios.forEach(function(radio) {
+							radio.addEventListener('change', function() {
+								var smokerGroup = radio.closest('.row') || radio.parentElement.parentElement;
+								var smokerFeedback = null;
+								if (smokerGroup) {
+									smokerFeedback = smokerGroup.querySelector('.invalid-feedback');
+								}
+								if (!smokerFeedback) {
+									smokerFeedback = radio.parentElement.querySelector('.invalid-feedback');
+								}
+								if (smokerFeedback) {
+									smokerFeedback.classList.remove('d-block');
+									smokerFeedback.classList.add('d-none');
+								}
+								smokerRadios.forEach(function(r) {
+									r.classList.remove('is-invalid');
+									r.classList.remove('is-valid');
+								});
+							});
+						});
+					}
+				});
+			// Utility to clear a form and its feedback
+			function clearFormAndFeedback(form) {
+				if (!form) return;
+				form.reset();
+				form.classList.remove('was-validated');
+				// Remove custom validity and feedback for all inputs/selects
+				var elements = form.querySelectorAll('input, select, textarea');
+				elements.forEach(function(el) {
+					el.setCustomValidity && el.setCustomValidity('');
+					el.classList.remove('is-invalid');
+					el.classList.remove('is-valid');
+				});
+				// Hide any .invalid-feedback
+				var feedbacks = form.querySelectorAll('.invalid-feedback');
+				feedbacks.forEach(function(fb) {
+					fb.classList.remove('d-block');
+					fb.classList.add('d-none');
+				});
+				// Remove is-invalid from custom radio groups
+				var groups = form.querySelectorAll('.form-radio-group, .is-invalid');
+				groups.forEach(function(g) { g.classList.remove('is-invalid'); });
+			}
 		// Progress bar stepper logic
 		function setProgressStep(step) {
 			const steps = document.querySelectorAll('.progressbar-wrapper .step .circle');
@@ -53,24 +156,45 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (autoCard && autoFormContainer) {
 		autoCard.addEventListener('click', function () {
 			autoFormContainer.style.display = 'block';
-			if (homeFormContainer) homeFormContainer.style.display = 'none';
-			if (lifeFormContainer) lifeFormContainer.style.display = 'none';
+			if (homeFormContainer) {
+				homeFormContainer.style.display = 'none';
+				clearFormAndFeedback(document.getElementById('homeInsuranceForm'));
+			}
+			if (lifeFormContainer) {
+				lifeFormContainer.style.display = 'none';
+				clearFormAndFeedback(document.getElementById('lifeInsuranceForm'));
+			}
+			clearFormAndFeedback(document.getElementById('autoInsuranceForm'));
 			autoFormContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		});
 	}
 	if (homeCard && homeFormContainer) {
 		homeCard.addEventListener('click', function () {
 			homeFormContainer.style.display = 'block';
-			if (autoFormContainer) autoFormContainer.style.display = 'none';
-			if (lifeFormContainer) lifeFormContainer.style.display = 'none';
+			if (autoFormContainer) {
+				autoFormContainer.style.display = 'none';
+				clearFormAndFeedback(document.getElementById('autoInsuranceForm'));
+			}
+			if (lifeFormContainer) {
+				lifeFormContainer.style.display = 'none';
+				clearFormAndFeedback(document.getElementById('lifeInsuranceForm'));
+			}
+			clearFormAndFeedback(document.getElementById('homeInsuranceForm'));
 			homeFormContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		});
 	}
 	if (lifeCard && lifeFormContainer) {
 		lifeCard.addEventListener('click', function () {
 			lifeFormContainer.style.display = 'block';
-			if (homeFormContainer) homeFormContainer.style.display = 'none';
-			if (autoFormContainer) autoFormContainer.style.display = 'none';
+			if (homeFormContainer) {
+				homeFormContainer.style.display = 'none';
+				clearFormAndFeedback(document.getElementById('homeInsuranceForm'));
+			}
+			if (autoFormContainer) {
+				autoFormContainer.style.display = 'none';
+				clearFormAndFeedback(document.getElementById('autoInsuranceForm'));
+			}
+			clearFormAndFeedback(document.getElementById('lifeInsuranceForm'));
 			lifeFormContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		});
 	}
@@ -101,7 +225,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 			// Validate Full Name (min 2 chars)
 			if (nameInput.value.trim().length < 2) {
-				nameInput.setCustomValidity('Invalid');
+				nameInput.setCustomValidity('Full name must be at least 2 characters.');
+			} else if (/[^a-zA-Z\s'-]/.test(nameInput.value.trim())) {
+				nameInput.setCustomValidity('Full name cannot contain numbers or special characters.');
 			}
 			// Validate Age (18-100)
 			var age = parseInt(ageInput.value, 10);
@@ -148,6 +274,16 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (!homeForm.checkValidity()) {
 				event.preventDefault();
 				event.stopPropagation();
+				// Show feedback for invalid fields
+				var invalidFields = homeForm.querySelectorAll(':invalid');
+				invalidFields.forEach(function(field) {
+					field.classList.add('is-invalid');
+					var feedback = field.parentElement.querySelector('.invalid-feedback');
+					if (feedback) {
+						feedback.classList.remove('d-none');
+						feedback.classList.add('d-block');
+					}
+				});
 			}
 			homeForm.classList.add('was-validated');
 		}, false);
@@ -168,7 +304,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			// Validate Full Name (min 2 chars)
 			var nameInput = document.getElementById('fullName');
 			if (nameInput.value.trim().length < 2) {
-				nameInput.setCustomValidity('Invalid');
+				nameInput.setCustomValidity('Full name must be at least 2 characters.');
+			} else if (/[^a-zA-Z\s'-]/.test(nameInput.value.trim())) {
+				nameInput.setCustomValidity('Full name cannot contain numbers or special characters.');
 			} else {
 				nameInput.setCustomValidity('');
 			}
@@ -238,6 +376,16 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (!autoForm.checkValidity()) {
 				event.preventDefault();
 				event.stopPropagation();
+				// Show feedback for invalid fields
+				var invalidFields = autoForm.querySelectorAll(':invalid');
+				invalidFields.forEach(function(field) {
+					field.classList.add('is-invalid');
+					var feedback = field.parentElement.querySelector('.invalid-feedback');
+					if (feedback) {
+						feedback.classList.remove('d-none');
+						feedback.classList.add('d-block');
+					}
+				});
 			}
 			autoForm.classList.add('was-validated');
 		}, false);
@@ -258,7 +406,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			// Validate Full Name (min 2 chars)
 			var nameInput = document.getElementById('lifeFullName');
 			if (nameInput.value.trim().length < 2) {
-				nameInput.setCustomValidity('Invalid');
+				nameInput.setCustomValidity('Full name must be at least 2 characters.');
+			} else if (/[^a-zA-Z\s'-]/.test(nameInput.value.trim())) {
+				nameInput.setCustomValidity('Full name cannot contain numbers or special characters.');
 			} else {
 				nameInput.setCustomValidity('');
 			}
@@ -329,6 +479,16 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (!lifeForm.checkValidity()) {
 				event.preventDefault();
 				event.stopPropagation();
+				// Show feedback for invalid fields
+				var invalidFields = lifeForm.querySelectorAll(':invalid');
+				invalidFields.forEach(function(field) {
+					field.classList.add('is-invalid');
+					var feedback = field.parentElement.querySelector('.invalid-feedback');
+					if (feedback) {
+						feedback.classList.remove('d-none');
+						feedback.classList.add('d-block');
+					}
+				});
 			}
 			lifeForm.classList.add('was-validated');
 		}, false);
