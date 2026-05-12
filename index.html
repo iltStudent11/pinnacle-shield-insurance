@@ -27,7 +27,7 @@
     <header style="background-color: #1a1446 !important; color: #ffffff important;">
         <nav class="navbar navbar-expand-lg" style="background-color: #1a1446 !important; color: #ffffff !important;">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#" style="color: #ffffff !important;">Pinnacle Shield Insurance</a>
+                <a class="navbar-brand" href="index.html" style="color: #ffffff !important;">Pinnacle Shield Insurance</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -88,8 +88,98 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Testimonial Section -->
+            <section class="py-5 bg-light">
+                <div class="container">
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-lg-8 text-center">
+                            <h2 class="mb-3">What Our Clients Say</h2>
+                            <p class="lead">Hear from some of our satisfied customers who trust Pinnacle Shield Insurance for their peace of mind.</p>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p>"Pinnacle Shield made getting insurance so easy and stress-free. Their team was incredibly helpful and responsive!"</p>
+                                        <footer class="blockquote-footer mt-2">Sarah M., <cite title="Source Title">Homeowner</cite></footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p>"I feel secure knowing my family is protected. The coverage options were clear and affordable."</p>
+                                        <footer class="blockquote-footer mt-2">James T., <cite title="Source Title">Life Insurance Customer</cite></footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Provided Section -->
+            <section class="py-5">
+                <div class="container">
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-lg-8 text-center">
+                            <h2 class="mb-3">Our Services</h2>
+                            <p class="lead">Comprehensive insurance solutions tailored to your needs.</p>
+                        </div>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm text-center service-card clickable-service" data-insurance="auto">
+                                <div class="card-body">
+                                    <div class="mb-3" style="font-size:2.5rem;">🚗</div>
+                                    <h5 class="card-title">Auto Insurance</h5>
+                                    <p class="card-text">Drive with confidence knowing you’re covered with our reliable auto insurance policies.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm text-center service-card clickable-service" data-insurance="home">
+                                <div class="card-body">
+                                    <div class="mb-3" style="font-size:2.5rem;">🏠</div>
+                                    <h5 class="card-title">Home Insurance</h5>
+                                    <p class="card-text">Protect your home and belongings with flexible coverage options and fast claims support.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm text-center service-card clickable-service" data-insurance="life">
+                                <div class="card-body">
+                                    <div class="mb-3" style="font-size:2.5rem;">❤️</div>
+                                    <h5 class="card-title">Life Insurance</h5>
+                                    <p class="card-text">Ensure your loved ones are financially secure with our range of life insurance plans.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
     </main>
         <footer style="background-color: #1a1446 !important; color: #ffffff important;">
+                <script src="js/main.js"></script>
+                <script>
+                // Make Our Services cards clickable and pass selection to quote.html
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.querySelectorAll('.clickable-service').forEach(function(card) {
+                        card.style.cursor = 'pointer';
+                        card.addEventListener('click', function() {
+                            var insuranceType = card.getAttribute('data-insurance');
+                            // Store selection in localStorage
+                            localStorage.setItem('selectedInsuranceType', insuranceType);
+                            window.location.href = 'quote.html';
+                        });
+                    });
+                });
+                </script>
         <nav class="mt-5" style="background-color: #1a1446 !important; color: #ffffff !important;">
             <div class="container-fluid d-flex flex-column flex-md-row justify-content-between align-items-center py-2">
                 <a class="navbar-brand m-0 mb-2 mb-md-0" href="#" style="color: #ffffff !important;">&copy; 2026 Pinnacle Shield Insurance. All rights reserved.</a>

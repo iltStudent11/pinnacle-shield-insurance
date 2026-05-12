@@ -1,5 +1,20 @@
 // Hide forms on page load and hide other forms when one is shown
 document.addEventListener('DOMContentLoaded', function () {
+					// Auto-select insurance type if set in localStorage (from homepage)
+					var selectedType = localStorage.getItem('selectedInsuranceType');
+					if (selectedType) {
+						// Remove after reading so it doesn't persist
+						localStorage.removeItem('selectedInsuranceType');
+						setTimeout(function() {
+							if (selectedType === 'auto' && document.querySelector('.auto-insurance-card')) {
+								document.querySelector('.auto-insurance-card').click();
+							} else if (selectedType === 'home' && document.querySelector('.home-insurance-card')) {
+								document.querySelector('.home-insurance-card').click();
+							} else if (selectedType === 'life' && document.querySelector('.life-insurance-card')) {
+								document.querySelector('.life-insurance-card').click();
+							}
+						}, 200); // Delay to ensure DOM is ready
+					}
 				// Utility to hide invalid-feedback and alert for a field
 				function hideFeedbackForField(field) {
 					if (!field) return;
