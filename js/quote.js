@@ -1,5 +1,48 @@
 // Hide forms on page load and hide other forms when one is shown
 document.addEventListener('DOMContentLoaded', function () {
+		// Progress bar stepper logic
+		function setProgressStep(step) {
+			const steps = document.querySelectorAll('.progressbar-wrapper .step .circle');
+			const connectors = document.querySelectorAll('.progressbar-wrapper .progress-connector');
+			steps.forEach((circle, idx) => {
+				if (idx < step) {
+					circle.style.background = '#0d6efd';
+				} else {
+					circle.style.background = '#6c757d';
+				}
+			});
+			connectors.forEach((conn, idx) => {
+				if (idx < step - 1) {
+					conn.style.background = '#0d6efd';
+				} else {
+					conn.style.background = '#6c757d';
+				}
+			});
+		}
+
+		// Step 1: Select Type (default)
+		setProgressStep(1);
+
+		// When a card is clicked, move to Step 2
+		var autoCard = document.querySelector('.auto-insurance-card');
+		var homeCard = document.querySelector('.home-insurance-card');
+		var lifeCard = document.querySelector('.life-insurance-card');
+		if (autoCard) autoCard.addEventListener('click', function () { setProgressStep(2); });
+		if (homeCard) homeCard.addEventListener('click', function () { setProgressStep(2); });
+		if (lifeCard) lifeCard.addEventListener('click', function () { setProgressStep(2); });
+
+		// When any form is submitted and valid, move to Step 3
+		function advanceToStep3OnValid(form) {
+			if (!form) return;
+			form.addEventListener('submit', function (event) {
+				if (form.checkValidity()) {
+					setProgressStep(3);
+				}
+			});
+		}
+		advanceToStep3OnValid(document.getElementById('autoInsuranceForm'));
+		advanceToStep3OnValid(document.getElementById('homeInsuranceForm'));
+		advanceToStep3OnValid(document.getElementById('lifeInsuranceForm'));
 	var autoCard = document.querySelector('.auto-insurance-card');
 	var homeCard = document.querySelector('.home-insurance-card');
 	var lifeCard = document.querySelector('.life-insurance-card');
