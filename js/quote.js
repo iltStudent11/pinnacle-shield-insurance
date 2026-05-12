@@ -1,4 +1,4 @@
-
+// Hide forms on page load and hide other forms when one is shown
 document.addEventListener('DOMContentLoaded', function () {
 	var autoCard = document.querySelector('.auto-insurance-card');
 	var homeCard = document.querySelector('.home-insurance-card');

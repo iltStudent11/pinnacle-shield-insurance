@@ -1,8 +1,16 @@
 
                  
+<!--
+    Pinnacle Shield Insurance - Quote Page
+    Bootstrap 5 is used for layout and styling.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <!--
+            Head Section
+            - Loads Bootstrap CSS from CDN
+        -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get a Quote - Pinnacle Shield Insurance</title>
@@ -12,6 +20,10 @@
           crossorigin="anonymous">
 </head>
 <body>
+        <!--
+            Header Section
+            - Contains the navigation bar with links to all main pages
+        -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
@@ -31,13 +43,21 @@
         </nav>
     </header>
 
-    <main>
-        <div class="container mt-5">
+        <main>
+                <!--
+                    Main Content
+                -->
+                <div class="container mt-5">
             <h1 class="text-center mb-2">Get Your Insurance Quote</h1>
             <p class="text-center">Select an insurance type, fill in your details, and get an instant personalized quote with a full breakdown of factors.</p>
         </div>
 
-        <section class="insurance-types-section py-5">
+                <!--
+                    Insurance Type Selection
+                    - User selects which insurance type to get a quote for
+                    - Each card is clickable and triggers the corresponding form
+                -->
+                <section class="insurance-types-section py-5">
             <div class="container">
                 <h3 class="text-center mb-4">Step 1: Choose Insurance Type</h3>
                 <div class="row">
@@ -69,14 +89,16 @@
                         </div>
                 </section>
 
-                <!-- Auto Insurance Form (inline, hidden by default) -->
+                                <!--
+                                    Auto Insurance Form
+                                    - Hidden by default, shown when Auto Insurance card is clicked
+                                -->
                 <div id="autoInsuranceFormContainer" class="container-fluid mt-4 px-0" style="display:none;">
                     <div class="card mx-0">
                         <div class="card-body">
                             <h5 class="card-title mb-3">Auto Insurance Quote</h5>
                             <form id="autoInsuranceForm">
                                 <div class="row g-3">
-                                                                        <!-- ...existing fields... -->
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <label for="fullName" class="form-label">Full Name</label>
                                         <input type="text" class="form-control" id="fullName" name="fullName" required minlength="2" placeholder="Enter your full name">
@@ -181,7 +203,10 @@
                     </div>
                 </div>
                 
-                <!-- Home Insurance Form (hidden by default, shown on card click) -->
+                                <!--
+                                    Home Insurance Form
+                                    - Hidden by default, shown when Home Insurance card is clicked
+                                -->
                 <div id="homeInsuranceFormContainer" class="container-fluid mt-4 px-0" style="display:none;">
                     <div class="card mx-0">
                         <div class="card-body">
@@ -282,7 +307,10 @@
                         </div>
                     </div>
                 </div>
-            <!-- Life Insurance Form (hidden by default, shown on card click) -->
+                        <!--
+                            Life Insurance Form
+                            - Hidden by default, shown when Life Insurance card is clicked
+                        -->
             <div id="lifeInsuranceFormContainer" class="container-fluid mt-4 px-0" style="display:none;">
                 <div class="card mx-0">
                     <div class="card-body">
@@ -397,15 +425,21 @@
             </div>
         </div>
 
-    <footer class="navbar navbar-dark bg-dark mt-5">
+        <!--
+            Footer Section
+        -->
+        <footer class="navbar navbar-dark bg-dark mt-5">
         <div class="container justify-content-center">
             <span class="navbar-text text-white w-100 text-center">&copy; 2024 Pinnacle Shield Insurance. All rights reserved.</span>
         </div>
     </footer>   
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-                        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-                        crossorigin="anonymous"></script>
-        <script src="js/quote.js"></script>
+                <!--
+                    Bootstrap JS and Custom JS
+                -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                                                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                                                crossorigin="anonymous"></script>
+                <script src="js/quote.js"></script>
 </body>
 </html>
