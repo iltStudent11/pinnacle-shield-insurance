@@ -299,6 +299,69 @@ document.addEventListener('DOMContentLoaded', function () {
 						feedback.classList.add('d-block');
 					}
 				});
+			} else {
+				// Calculate home insurance quote and show summary card
+				event.preventDefault();
+				var nameInput = document.getElementById('homeFullName');
+				var homeValueInput = document.getElementById('homeValue');
+				var yearBuiltInput = document.getElementById('yearBuilt');
+				var homeValue = parseInt(homeValueInput.value, 10);
+				var yearBuilt = parseInt(yearBuiltInput.value, 10);
+				// Monthly base rate: Home Value x 0.003 / 12
+				var baseRate = (homeValue * 0.003) / 12;
+				// Year Built factor
+				var yearBuiltFactor = 1.0;
+				if (yearBuilt < 1970) {
+					yearBuiltFactor = 1.4;
+				} else if (yearBuilt >= 1970 && yearBuilt <= 1999) {
+					yearBuiltFactor = 1.1;
+				} else if (yearBuilt >= 2000) {
+					yearBuiltFactor = 1.0;
+				}
+				// Construction factor
+				var constructionType = document.getElementById('constructionType');
+				var constructionFactor = 1.0;
+				if (constructionType && constructionType.value) {
+					if (constructionType.value === 'Wood') {
+						constructionFactor = 1.2;
+					} else if (constructionType.value === 'Brick') {
+						constructionFactor = 1.0;
+					} else if (constructionType.value === 'Concrete') {
+						constructionFactor = 0.9;
+					} else if (constructionType.value === 'Steel') {
+						constructionFactor = 0.85;
+					}
+				}
+				// Size factor: $0.01 per square foot per month
+				var sqftInput = document.getElementById('squareFootage');
+				var sqft = parseInt(sqftInput.value, 10) || 0;
+				var sizeFactor = sqft * 0.01;
+				var monthly = (baseRate * yearBuiltFactor * constructionFactor) + sizeFactor;
+				var annual = monthly * 12;
+				var customerName = nameInput.value.trim();
+				// Remove any previous summary card
+				var oldCard = document.getElementById('home-quote-summary-card');
+				if (oldCard) oldCard.remove();
+				// Create card
+				var card = document.createElement('div');
+				card.id = 'home-quote-summary-card';
+				card.className = 'card shadow-lg my-4';
+				card.style.maxWidth = '400px';
+				card.style.margin = '0 auto';
+				card.innerHTML = `
+					<div class="card-header bg-primary text-white text-center">
+						<h5 class="mb-0">Quote Summary</h5>
+					</div>
+					<div class="card-body text-center">
+						<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
+						<p class="mb-2"><strong>Insurance Type:</strong> Home</p>
+						<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+					</div>
+				`;
+				// Insert after the form
+				homeForm.parentNode.insertBefore(card, homeForm.nextSibling);
+				card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			}
 			homeForm.classList.add('was-validated');
 		}, false);
