@@ -684,6 +684,115 @@ document.addEventListener('DOMContentLoaded', function () {
 						feedback.classList.add('d-block');
 					}
 				});
+			} else {
+				// Calculate life insurance quote and show summary card
+				event.preventDefault();
+				var nameInput = document.getElementById('lifeFullName');
+				var coverageAmountInput = document.getElementById('lifeCoverageAmount');
+				var ageInput = document.getElementById('lifeAge');
+				var coverageAmount = parseInt(coverageAmountInput.value, 10);
+				var age = parseInt(ageInput.value, 10);
+				// Monthly base rate: Coverage Amount x 0.0005 / 12
+				var baseRate = (coverageAmount * 0.0005) / 12;
+				// Age factor
+				var ageFactor = 1.0;
+				if (age >= 18 && age <= 30) {
+					ageFactor = 1.0;
+				} else if (age >= 31 && age <= 45) {
+					ageFactor = 1.5;
+				} else if (age >= 46 && age <= 60) {
+					ageFactor = 2.5;
+				} else if (age >= 61 && age <= 85) {
+					ageFactor = 4.0;
+				}
+				// Smoke factor
+				var smokerRadios = document.getElementsByName('lifeSmoker');
+				var smokeFactor = 1.0;
+				for (var i = 0; i < smokerRadios.length; i++) {
+					if (smokerRadios[i].checked) {
+						if (smokerRadios[i].value.toLowerCase() === 'yes') {
+							smokeFactor = 2.0;
+						} else {
+							smokeFactor = 1.0;
+						}
+					}
+				}
+				// Exercise Frequency factor
+				var exercise = document.getElementById('lifeExercise');
+				var exerciseFactor = 1.0;
+				if (exercise && exercise.value) {
+					if (exercise.value === 'Rarely') {
+						exerciseFactor = 1.3;
+					} else if (exercise.value === '1-2 times/week') {
+						exerciseFactor = 1.1;
+					} else if (exercise.value === '3-4 times/week') {
+						exerciseFactor = 1.0;
+					} else if (exercise.value === '5+ times/week') {
+						exerciseFactor = 0.9;
+					}
+				}
+				// Pre-Existing Conditions factor
+				var preExisting = document.getElementById('lifePreExisting');
+				var preExistingFactor = 1.0;
+				if (preExisting && preExisting.value) {
+					if (preExisting.value.toLowerCase() === 'yes') {
+						preExistingFactor = 1.5;
+					} else {
+						preExistingFactor = 1.0;
+					}
+				}
+				// Gender factor
+				var gender = document.getElementById('lifeGender');
+				var genderFactor = 1.0;
+				if (gender && gender.value) {
+					if (gender.value === 'Male') {
+						genderFactor = 1.1;
+					} else if (gender.value === 'Female') {
+						genderFactor = 1.0;
+					} else if (gender.value === 'Non-binary') {
+						genderFactor = 1.05;
+					}
+				}
+				// Coverage Level factor
+				var coverageRadios = document.getElementsByName('lifeCoverageLevel');
+				var coverageLevelFactor = 1.0;
+				for (var i = 0; i < coverageRadios.length; i++) {
+					if (coverageRadios[i].checked) {
+						if (coverageRadios[i].value === "Basic") {
+							coverageLevelFactor = 0.8;
+						} else if (coverageRadios[i].value === "Standard") {
+							coverageLevelFactor = 1.0;
+						} else if (coverageRadios[i].value === "Premium") {
+							coverageLevelFactor = 1.4;
+						}
+					}
+				}
+				var monthly = baseRate * ageFactor * smokeFactor * exerciseFactor * preExistingFactor * genderFactor * coverageLevelFactor;
+				var annual = monthly * 12;
+				var customerName = nameInput.value.trim();
+				// Remove any previous summary card
+				var oldCard = document.getElementById('life-quote-summary-card');
+				if (oldCard) oldCard.remove();
+				// Create card
+				var card = document.createElement('div');
+				card.id = 'life-quote-summary-card';
+				card.className = 'card shadow-lg my-4';
+				card.style.maxWidth = '400px';
+				card.style.margin = '0 auto';
+				card.innerHTML = `
+					<div class="card-header bg-primary text-white text-center">
+						<h5 class="mb-0">Quote Summary</h5>
+					</div>
+					<div class="card-body text-center">
+						<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
+						<p class="mb-2"><strong>Insurance Type:</strong> Life</p>
+						<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+					</div>
+				`;
+				// Insert after the form
+				lifeForm.parentNode.insertBefore(card, lifeForm.nextSibling);
+				card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			}
 			lifeForm.classList.add('was-validated');
 		}, false);
