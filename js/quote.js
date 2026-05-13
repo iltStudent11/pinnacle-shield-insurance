@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}, false);
 	}
 
-	// Auto Insurance form validation
+	// Auto Insurance form validation and quote calculation
 	var autoForm = document.getElementById('autoInsuranceForm');
 	if (autoForm) {
 		autoForm.addEventListener('submit', function (event) {
@@ -401,7 +401,98 @@ document.addEventListener('DOMContentLoaded', function () {
 						feedback.classList.add('d-block');
 					}
 				});
-			}
+						} else {
+								// Calculate quote and show summary card
+								event.preventDefault();
+								var baseRate = 75;
+								var ageFactor = 1.0;
+								if (age < 25) {
+									ageFactor = 1.5;
+								} else if (age > 65) {
+									ageFactor = 1.3;
+								}
+
+								// Vehicle age factor
+								var vehicleYearInput = document.getElementById('vehicleYear');
+								var vehicleYear = parseInt(vehicleYearInput.value, 10);
+								var currentYear = new Date().getFullYear();
+								var vehicleAge = currentYear - vehicleYear;
+								var vehicleAgeFactor = 1.0;
+								if (vehicleAge < 3) {
+								    vehicleAgeFactor = 1.3;
+								} else if (vehicleAge <= 10) {
+								    vehicleAgeFactor = 1.0;
+								} else if (vehicleAge > 10) {
+								    vehicleAgeFactor = 0.8;
+								}
+
+								// Determine mileage factor
+								var mileageValue = annualMileage.value;
+								var mileageFactor = 1.0;
+								if (mileageValue === "Under 5,000") {
+									mileageFactor = 0.8;
+								} else if (mileageValue === "5,000–10,000") {
+									mileageFactor = 1.0;
+								} else if (mileageValue === "10,001–15,000") {
+									mileageFactor = 1.1;
+								} else if (mileageValue === "15,001–20,000") {
+									mileageFactor = 1.3;
+								} else if (mileageValue === "Over 20,000") {
+									mileageFactor = 1.5;
+								}
+								// Determine driving record factor
+								var drivingRecordValue = drivingRecord.value;
+								var drivingRecordFactor = 1.0;
+								if (drivingRecordValue === "Clean") {
+									drivingRecordFactor = 1.0;
+								} else if (drivingRecordValue === "1 Ticket") {
+									drivingRecordFactor = 1.2;
+								} else if (drivingRecordValue === "2+ Tickets") {
+									drivingRecordFactor = 1.5;
+								} else if (drivingRecordValue === "Accident in Last 3 Years") {
+									drivingRecordFactor = 1.8;
+								}
+								// Determine coverage level factor
+								var coverageRadios = document.getElementsByName('coverageLevel');
+								var coverageLevelFactor = 1.0;
+								for (var i = 0; i < coverageRadios.length; i++) {
+									if (coverageRadios[i].checked) {
+										if (coverageRadios[i].value === "Basic") {
+											coverageLevelFactor = 0.8;
+										} else if (coverageRadios[i].value === "Standard") {
+											coverageLevelFactor = 1.0;
+										} else if (coverageRadios[i].value === "Premium") {
+											coverageLevelFactor = 1.4;
+										}
+									}
+								}
+								var monthly = baseRate * ageFactor * vehicleAgeFactor * mileageFactor * drivingRecordFactor * coverageLevelFactor;
+								var annual = monthly * 12;
+								var customerName = nameInput.value.trim();
+								// Remove any previous summary card
+								var oldCard = document.getElementById('auto-quote-summary-card');
+								if (oldCard) oldCard.remove();
+								// Create card
+								var card = document.createElement('div');
+								card.id = 'auto-quote-summary-card';
+								card.className = 'card shadow-lg my-4';
+								card.style.maxWidth = '400px';
+								card.style.margin = '0 auto';
+								card.innerHTML = `
+									<div class="card-header bg-primary text-white text-center">
+										<h5 class="mb-0">Quote Summary</h5>
+									</div>
+									<div class="card-body text-center">
+										<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
+										<p class="mb-2"><strong>Insurance Type:</strong> Auto</p>
+										<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+										<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+									</div>
+								`;
+								// Insert after the form
+								autoForm.parentNode.insertBefore(card, autoForm.nextSibling);
+								card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+						}
 			autoForm.classList.add('was-validated');
 		}, false);
 	}
