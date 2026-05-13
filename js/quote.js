@@ -336,7 +336,33 @@ document.addEventListener('DOMContentLoaded', function () {
 				var sqftInput = document.getElementById('squareFootage');
 				var sqft = parseInt(sqftInput.value, 10) || 0;
 				var sizeFactor = sqft * 0.01;
-				var monthly = (baseRate * yearBuiltFactor * constructionFactor) + sizeFactor;
+				// Security Discount: if security system selected, x0.95
+				var securitySystem = document.getElementById('securitySystem');
+				var securityDiscount = 1.0;
+				if (securitySystem && securitySystem.value && securitySystem.value.toLowerCase() === 'yes') {
+					securityDiscount = 0.95;
+				}
+				// Sprinkler Discount: if sprinklers present, x0.92
+				var sprinklerSystem = document.getElementById('sprinklerSystem');
+				var sprinklerDiscount = 1.0;
+				if (sprinklerSystem && sprinklerSystem.value && sprinklerSystem.value.toLowerCase() === 'yes') {
+					sprinklerDiscount = 0.92;
+				}
+				// Coverage Level factor
+				var coverageRadios = document.getElementsByName('homeCoverageLevel');
+				var coverageLevelFactor = 1.0;
+				for (var i = 0; i < coverageRadios.length; i++) {
+					if (coverageRadios[i].checked) {
+						if (coverageRadios[i].value === "Basic") {
+							coverageLevelFactor = 0.8;
+						} else if (coverageRadios[i].value === "Standard") {
+							coverageLevelFactor = 1.0;
+						} else if (coverageRadios[i].value === "Premium") {
+							coverageLevelFactor = 1.4;
+						}
+					}
+				}
+				var monthly = ((((baseRate * yearBuiltFactor * constructionFactor) + sizeFactor) * securityDiscount) * sprinklerDiscount) * coverageLevelFactor;
 				var annual = monthly * 12;
 				var customerName = nameInput.value.trim();
 				// Remove any previous summary card
