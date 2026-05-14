@@ -374,17 +374,27 @@ document.addEventListener('DOMContentLoaded', function () {
 				card.className = 'card shadow-lg my-4';
 				card.style.maxWidth = '400px';
 				card.style.margin = '0 auto';
-				card.innerHTML = `
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Quote Summary</h5>
-					</div>
-					<div class="card-body text-center">
-						<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
-						<p class="mb-2"><strong>Insurance Type:</strong> Home</p>
-						<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-						<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-					</div>
-				`;
+				   card.innerHTML = `
+					   <div class="card-header bg-primary text-white text-center">
+						   <h5 class="mb-0">Quote Summary</h5>
+					   </div>
+					   <div class="card-body text-center">
+						   <p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
+						   <p class="mb-2"><strong>Insurance Type:</strong> Home</p>
+						   <p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						   <p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						   <button type="button" class="btn btn-secondary mt-3" id="home-get-another-quote">Get Another Quote</button>
+					   </div>
+				   `;
+			// Insert after the form
+			homeForm.parentNode.insertBefore(card, homeForm.nextSibling);
+			card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			// Attach the event handler right after inserting the card
+			document.getElementById('home-get-another-quote').onclick = function() {
+				clearFormAndFeedback(homeForm);
+				var oldCard = document.getElementById('home-quote-summary-card');
+				if (oldCard) oldCard.remove();
+			};
 				// Insert after the form
 				homeForm.parentNode.insertBefore(card, homeForm.nextSibling);
 				card.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -567,20 +577,27 @@ document.addEventListener('DOMContentLoaded', function () {
 								card.className = 'card shadow-lg my-4';
 								card.style.maxWidth = '400px';
 								card.style.margin = '0 auto';
-								card.innerHTML = `
-									<div class="card-header bg-primary text-white text-center">
-										<h5 class="mb-0">Quote Summary</h5>
-									</div>
-									<div class="card-body text-center">
-										<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
-										<p class="mb-2"><strong>Insurance Type:</strong> Auto</p>
-										<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-										<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-									</div>
-								`;
-								// Insert after the form
-								autoForm.parentNode.insertBefore(card, autoForm.nextSibling);
-								card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			card.innerHTML = `
+				<div class="card-header bg-primary text-white text-center">
+					<h5 class="mb-0">Quote Summary</h5>
+				</div>
+				<div class="card-body text-center">
+					<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
+					<p class="mb-2"><strong>Insurance Type:</strong> Auto</p>
+					<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+					<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+					<button type="button" class="btn btn-secondary mt-3" id="auto-get-another-quote">Get Another Quote</button>
+				</div>
+			`;
+			// Insert after the form
+			autoForm.parentNode.insertBefore(card, autoForm.nextSibling);
+			card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			// Attach the event handler right after inserting the card
+			document.getElementById('auto-get-another-quote').onclick = function() {
+				clearFormAndFeedback(autoForm);
+				var oldCard = document.getElementById('auto-quote-summary-card');
+				if (oldCard) oldCard.remove();
+			};
 						}
 			autoForm.classList.add('was-validated');
 		}, false);
@@ -685,13 +702,16 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 				});
 			} else {
-				// Calculate life insurance quote and show summary card
 				event.preventDefault();
 				var nameInput = document.getElementById('lifeFullName');
 				var coverageAmountInput = document.getElementById('lifeCoverageAmount');
 				var ageInput = document.getElementById('lifeAge');
-				var coverageAmount = parseInt(coverageAmountInput.value, 10);
+				var coverageAmount = parseInt(coverageAmountInput.value.replace(/[^0-9]/g, ''), 10);
 				var age = parseInt(ageInput.value, 10);
+				// if (isNaN(coverageAmount) || isNaN(age)) {
+				// 	// Do not proceed if values are invalid
+				// 	return;
+				// }
 				// Monthly base rate: Coverage Amount x 0.0005 / 12
 				var baseRate = (coverageAmount * 0.0005) / 12;
 				// Age factor
@@ -779,20 +799,27 @@ document.addEventListener('DOMContentLoaded', function () {
 				card.className = 'card shadow-lg my-4';
 				card.style.maxWidth = '400px';
 				card.style.margin = '0 auto';
-				card.innerHTML = `
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Quote Summary</h5>
-					</div>
-					<div class="card-body text-center">
-						<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
-						<p class="mb-2"><strong>Insurance Type:</strong> Life</p>
-						<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-						<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-					</div>
-				`;
-				// Insert after the form
-				lifeForm.parentNode.insertBefore(card, lifeForm.nextSibling);
-				card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				   card.innerHTML = `
+					   <div class="card-header bg-primary text-white text-center">
+						   <h5 class="mb-0">Quote Summary</h5>
+					   </div>
+					   <div class="card-body text-center">
+						   <p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
+						   <p class="mb-2"><strong>Insurance Type:</strong> Life</p>
+						   <p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						   <p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						   <button type="button" class="btn btn-secondary mt-3" id="life-get-another-quote">Get Another Quote</button>
+					   </div>
+				   `;
+				   // Insert after the form
+				   lifeForm.parentNode.insertBefore(card, lifeForm.nextSibling);
+				   card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				   // Attach the event handler right after inserting the card
+				   document.getElementById('life-get-another-quote').onclick = function() {
+					   clearFormAndFeedback(lifeForm);
+					   var oldCard = document.getElementById('life-quote-summary-card');
+					   if (oldCard) oldCard.remove();
+				   };
 			}
 			lifeForm.classList.add('was-validated');
 		}, false);
