@@ -1,3 +1,71 @@
+/* Responsive Media Queries */
+@media (max-width: 375.98px) {
+	html {
+		font-size: 14px;
+	}
+	.container, .container-fluid {
+		padding-left: 8px;
+		padding-right: 8px;
+	}
+	h1, h2 {
+		font-size: 1.3rem;
+	}
+	.navbar-brand, .nav-link {
+		font-size: 1rem;
+	}
+	.card {
+		font-size: 0.95rem;
+		margin-bottom: 1rem;
+	}
+}
+
+/* 768px wide */
+@media (min-width: 376px) and (max-width: 1023.98px) {
+	html {
+		font-size: 16px;
+	}
+	.container, .container-fluid {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	h1 {
+		font-size: 2rem;
+	}
+	h2 {
+		font-size: 1.5rem;
+	}
+	.navbar-brand, .nav-link {
+		font-size: 1.1rem;
+	}
+	.card {
+		font-size: 1rem;
+		margin-bottom: 1.25rem;
+	}
+}
+
+/* 1024px+ wide */
+@media (min-width: 1024px) {
+	html {
+		font-size: 18px;
+	}
+	.container, .container-fluid {
+		padding-left: 24px;
+		padding-right: 24px;
+	}
+	h1 {
+		font-size: 2.5rem;
+	}
+	h2 {
+		font-size: 2rem;
+	}
+	.navbar-brand, .nav-link {
+		font-size: 1.2rem;
+	}
+	.card {
+		font-size: 1.05rem;
+		margin-bottom: 1.5rem;
+	}
+}
 header .navbar .navbar-brand, header .navbar .nav-link, nav.navbar .navbar-brand, nav.navbar .nav-link {
 	color: #ffffff !important;
 }
@@ -69,7 +137,7 @@ footer, footer .navbar-text, footer .navbar, footer .container, footer span {
 	border-color: #721b06 !important;
 }
 
-*, *::before, *::after {
+/* *, *::before, *::after {
 box-sizing: border-box;
 margin: 0;
 padding: 0;
@@ -90,7 +158,7 @@ padding: 0;
 	.footer .navbar-text {
 		font-size: 0.95rem;
 	}
-}
+} */
 /* Card Hover Effects */
 .card {
 	transition: box-shadow 0.3s ease;
