@@ -1,3 +1,60 @@
+@media (max-width: 1200px) {
+	footer .container-fluid.d-flex {
+		flex-direction: column !important;
+		align-items: stretch !important;
+		gap: 1.5rem;
+		text-align: center;
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+	}
+	.footer-quick-links {
+		margin-bottom: 1rem !important;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+	.footer-quick-links a {
+		margin-right: 0 !important;
+		margin-bottom: 0.25rem;
+	}
+	.text-end {
+		text-align: center !important;
+		margin-bottom: 0.5rem;
+	}
+	footer .navbar-brand {
+		margin-bottom: 0.5rem !important;
+		display: block;
+	}
+}
+/* Responsive Footer Layout */
+@media (max-width: 767.98px) {
+	footer .container-fluid.d-flex {
+		flex-direction: column !important;
+		align-items: stretch !important;
+		gap: 1rem;
+		text-align: center;
+	}
+	.footer-quick-links {
+		margin-bottom: 1rem !important;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+	.footer-quick-links a {
+		margin-right: 0 !important;
+		margin-bottom: 0.25rem;
+	}
+	.text-end {
+		text-align: center !important;
+		margin-bottom: 0.5rem;
+	}
+	footer .navbar-brand {
+		margin-bottom: 0.5rem !important;
+		display: block;
+	}
+}
 /* Responsive Media Queries */
 @media (max-width: 375.98px) {
 	html {
@@ -91,6 +148,8 @@ footer, footer .navbar-text, footer .navbar, footer .container, footer span {
 
 .home-insurance-card {
 	border: 2px solid #28a745 !important;
+	cursor: pointer;
+	transition: box-shadow 0.2s, border-color 0.2s;
 }
 .green-card .card-title,
 .green-card div[style*="font-size"] {
@@ -103,6 +162,8 @@ footer, footer .navbar-text, footer .navbar, footer .container, footer span {
 
 .life-insurance-card {
 	border: 2px solid #dc3545 !important;
+	cursor: pointer;
+	transition: box-shadow 0.2s, border-color 0.2s;
 }
 .red-card .card-title,
 .red-card div[style*="font-size"] {
