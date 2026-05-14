@@ -299,6 +299,32 @@ document.addEventListener('DOMContentLoaded', function () {
 						feedback.classList.add('d-block');
 					}
 				});
+				// Add input listeners to all fields for live validation feedback
+				var allInputs = homeForm.querySelectorAll('input, select');
+				allInputs.forEach(function(input) {
+					if (!input._liveValidationAttached) {
+						var validateAndShow = function() {
+							if (!input.checkValidity()) {
+								input.classList.add('is-invalid');
+								var feedback = input.parentElement.querySelector('.invalid-feedback');
+								if (feedback) {
+									feedback.classList.remove('d-none');
+									feedback.classList.add('d-block');
+								}
+							} else {
+								input.classList.remove('is-invalid');
+								var feedback = input.parentElement.querySelector('.invalid-feedback');
+								if (feedback) {
+									feedback.classList.remove('d-block');
+									feedback.classList.add('d-none');
+								}
+							}
+						};
+						input.addEventListener('input', validateAndShow);
+						input.addEventListener('blur', validateAndShow);
+						input._liveValidationAttached = true;
+					}
+				});
 			} else {
 				// Calculate home insurance quote and show summary card
 				event.preventDefault();
@@ -364,7 +390,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 				var monthly = ((((baseRate * yearBuiltFactor * constructionFactor) + sizeFactor) * securityDiscount) * sprinklerDiscount) * coverageLevelFactor;
 				var annual = monthly * 12;
-				var customerName = nameInput.value.trim();
+				var customerName = nameInput && nameInput.value ? nameInput.value.trim() : '(unknown)';
+				// Defensive: check for missing elements and log
+				if (!constructionType) console.error('constructionType element missing');
+				if (!securitySystem) console.error('securitySystem element missing');
+				if (!sprinklerSystem) console.error('sprinklerSystem element missing');
+				if (!coverageRadios || coverageRadios.length === 0) console.error('coverageRadios missing');
 				// Remove any previous summary card
 				var oldCard = document.getElementById('home-quote-summary-card');
 				if (oldCard) oldCard.remove();
@@ -374,18 +405,34 @@ document.addEventListener('DOMContentLoaded', function () {
 				card.className = 'card shadow-lg my-4';
 				card.style.maxWidth = '400px';
 				card.style.margin = '0 auto';
-				   card.innerHTML = `
-					   <div class="card-header bg-primary text-white text-center">
-						   <h5 class="mb-0">Quote Summary</h5>
-					   </div>
-					   <div class="card-body text-center">
-						   <p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
-						   <p class="mb-2"><strong>Insurance Type:</strong> Home</p>
-						   <p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-						   <p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
-						   <button type="button" class="btn btn-secondary mt-3" id="home-get-another-quote">Get Another Quote</button>
-					   </div>
-				   `;
+				card.innerHTML = `
+					<div class="card-header bg-primary text-white text-center">
+						<h5 class="mb-0">Quote Summary</h5>
+					</div>
+					<div class="card-body text-center">
+						<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
+						<p class="mb-2"><strong>Insurance Type:</strong> Home</p>
+						<div class="table-responsive mb-3">
+							<table class="table table-bordered table-sm mb-0">
+								<thead class="table-light">
+									<tr><th>Factor</th><th>Your Value</th><th>Impact / Multiplier</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>Home Value</td><td>${homeValue}</td><td>Base</td></tr>
+									<tr><td>Year Built</td><td>${yearBuilt}</td><td>${yearBuilt < 1970 ? '+40%' : (yearBuilt <= 1999 ? '+10%' : 'None')}</td></tr>
+									<tr><td>Construction</td><td>${constructionType && constructionType.value ? constructionType.value : '(none)'}</td><td>${constructionFactor === 1.2 ? '+20%' : constructionFactor === 0.9 ? '-10%' : constructionFactor === 0.85 ? '-15%' : 'None'}</td></tr>
+									<tr><td>Square Footage</td><td>${sqft}</td><td>+$${(sqft * 0.01).toFixed(2)}/mo</td></tr>
+									<tr><td>Security System</td><td>${securitySystem && securitySystem.value ? securitySystem.value : '(none)'}</td><td>${securityDiscount === 0.95 ? '-5%' : 'None'}</td></tr>
+									<tr><td>Sprinkler System</td><td>${sprinklerSystem && sprinklerSystem.value ? sprinklerSystem.value : '(none)'}</td><td>${sprinklerDiscount === 0.92 ? '-8%' : 'None'}</td></tr>
+									<tr><td>Coverage Level</td><td>${(() => { for (var i = 0; i < (coverageRadios ? coverageRadios.length : 0); i++) { if (coverageRadios[i].checked) return coverageRadios[i].value; } return ''; })()}</td><td>${coverageLevelFactor === 0.8 ? '-20%' : coverageLevelFactor === 1.4 ? '+40%' : 'Standard'}</td></tr>
+								</tbody>
+							</table>
+						</div>
+						<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+						<button type="button" class="btn btn-secondary mt-3" id="home-get-another-quote">Get Another Quote</button>
+					</div>
+				`;
 			// Insert after the form
 			homeForm.parentNode.insertBefore(card, homeForm.nextSibling);
 			card.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -500,7 +547,34 @@ document.addEventListener('DOMContentLoaded', function () {
 						feedback.classList.add('d-block');
 					}
 				});
-						} else {
+
+				// Add input listeners to all fields for live validation feedback
+				var allInputs = autoForm.querySelectorAll('input, select');
+				allInputs.forEach(function(input) {
+					if (!input._liveValidationAttached) {
+						var validateAndShow = function() {
+							if (!input.checkValidity()) {
+								input.classList.add('is-invalid');
+								var feedback = input.parentElement.querySelector('.invalid-feedback');
+								if (feedback) {
+									feedback.classList.remove('d-none');
+									feedback.classList.add('d-block');
+								}
+							} else {
+								input.classList.remove('is-invalid');
+								var feedback = input.parentElement.querySelector('.invalid-feedback');
+								if (feedback) {
+									feedback.classList.remove('d-block');
+									feedback.classList.add('d-none');
+								}
+							}
+						};
+						input.addEventListener('input', validateAndShow);
+						input.addEventListener('blur', validateAndShow);
+						input._liveValidationAttached = true;
+					}
+				});
+			} else {
 								// Calculate quote and show summary card
 								event.preventDefault();
 								var baseRate = 75;
@@ -584,6 +658,20 @@ document.addEventListener('DOMContentLoaded', function () {
 				<div class="card-body text-center">
 					<p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
 					<p class="mb-2"><strong>Insurance Type:</strong> Auto</p>
+					<div class="table-responsive mb-3">
+						<table class="table table-bordered table-sm mb-0">
+							<thead class="table-light">
+								<tr><th>Factor</th><th>Your Value</th><th>Impact / Multiplier</th></tr>
+							</thead>
+							<tbody>
+								<tr><td>Age</td><td>${age}</td><td>${age < 25 ? '+50% (young driver)' : (age > 65 ? '+30% (senior)' : 'None')}</td></tr>
+								<tr><td>Vehicle Year</td><td>${vehicleYear}</td><td>${vehicleAge < 3 ? '+30%' : (vehicleAge <= 10 ? 'None' : '-20%')}</td></tr>
+								<tr><td>Annual Mileage</td><td>${mileageValue}</td><td>${mileageFactor === 0.8 ? '-20%' : mileageFactor === 1.1 ? '+10%' : mileageFactor === 1.3 ? '+30%' : mileageFactor === 1.5 ? '+50%' : 'None'}</td></tr>
+								<tr><td>Driving Record</td><td>${drivingRecordValue}</td><td>${drivingRecordFactor === 1.2 ? '+20%' : drivingRecordFactor === 1.5 ? '+50%' : drivingRecordFactor === 1.8 ? '+80%' : 'None'}</td></tr>
+								<tr><td>Coverage Level</td><td>${(() => { for (var i = 0; i < coverageRadios.length; i++) { if (coverageRadios[i].checked) return coverageRadios[i].value; } return ''; })()}</td><td>${coverageLevelFactor === 0.8 ? '-20%' : coverageLevelFactor === 1.4 ? '+40%' : 'Standard'}</td></tr>
+							</tbody>
+						</table>
+					</div>
 					<p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
 					<p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
 					<button type="button" class="btn btn-secondary mt-3" id="auto-get-another-quote">Get Another Quote</button>
@@ -701,6 +789,32 @@ document.addEventListener('DOMContentLoaded', function () {
 						feedback.classList.add('d-block');
 					}
 				});
+				// Add input listeners to all fields for live validation feedback
+				var allInputs = lifeForm.querySelectorAll('input, select');
+				allInputs.forEach(function(input) {
+					if (!input._liveValidationAttached) {
+						var validateAndShow = function() {
+							if (!input.checkValidity()) {
+								input.classList.add('is-invalid');
+								var feedback = input.parentElement.querySelector('.invalid-feedback');
+								if (feedback) {
+									feedback.classList.remove('d-none');
+									feedback.classList.add('d-block');
+								}
+							} else {
+								input.classList.remove('is-invalid');
+								var feedback = input.parentElement.querySelector('.invalid-feedback');
+								if (feedback) {
+									feedback.classList.remove('d-block');
+									feedback.classList.add('d-none');
+								}
+							}
+						};
+						input.addEventListener('input', validateAndShow);
+						input.addEventListener('blur', validateAndShow);
+						input._liveValidationAttached = true;
+					}
+				});
 			} else {
 				event.preventDefault();
 				var nameInput = document.getElementById('lifeFullName');
@@ -806,6 +920,21 @@ document.addEventListener('DOMContentLoaded', function () {
 					   <div class="card-body text-center">
 						   <p class="mb-2"><strong>Customer:</strong> ${customerName}</p>
 						   <p class="mb-2"><strong>Insurance Type:</strong> Life</p>
+						   <div class="table-responsive mb-3">
+							   <table class="table table-bordered table-sm mb-0">
+								   <thead class="table-light">
+									   <tr><th>Factor</th><th>Your Value</th><th>Impact / Multiplier</th></tr>
+								   </thead>
+								   <tbody>
+									   <tr><td>Age</td><td>${age}</td><td>${age >= 18 && age <= 30 ? '1.0x' : age >= 31 && age <= 45 ? '1.5x' : age >= 46 && age <= 60 ? '2.5x' : age >= 61 && age <= 85 ? '4.0x' : ''}</td></tr>
+									   <tr><td>Smoker</td><td>${(() => { for (var i = 0; i < smokerRadios.length; i++) { if (smokerRadios[i].checked) return smokerRadios[i].value; } return ''; })()}</td><td>${smokeFactor === 2.0 ? '2.0x (smoker)' : '1.0x'}</td></tr>
+									   <tr><td>Exercise</td><td>${exercise.value}</td><td>${exerciseFactor === 1.3 ? '+30%' : exerciseFactor === 1.1 ? '+10%' : exerciseFactor === 0.9 ? '-10%' : 'None'}</td></tr>
+									   <tr><td>Pre-Existing</td><td>${preExisting.value}</td><td>${preExistingFactor === 1.5 ? '+50%' : 'None'}</td></tr>
+									   <tr><td>Gender</td><td>${gender.value}</td><td>${genderFactor === 1.1 ? '+10%' : genderFactor === 1.05 ? '+5%' : 'None'}</td></tr>
+									   <tr><td>Coverage Level</td><td>${(() => { for (var i = 0; i < coverageRadios.length; i++) { if (coverageRadios[i].checked) return coverageRadios[i].value; } return ''; })()}</td><td>${coverageLevelFactor === 0.8 ? '-20%' : coverageLevelFactor === 1.4 ? '+40%' : 'Standard'}</td></tr>
+								   </tbody>
+							   </table>
+						   </div>
 						   <p class="mb-2"><strong>Monthly Premium:</strong> <span style="font-size:1.2em;color:#0d6efd;">${monthly.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
 						   <p class="mb-2"><strong>Annual Premium:</strong> <span style="font-size:1.2em;color:#198754;">${annual.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
 						   <button type="button" class="btn btn-secondary mt-3" id="life-get-another-quote">Get Another Quote</button>
