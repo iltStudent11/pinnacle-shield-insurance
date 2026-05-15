@@ -1,3 +1,27 @@
+/* Responsive team images */
+.responsive-team-img {
+	width: 120px;
+	height: 120px;
+	object-fit: cover;
+}
+@media (max-width: 375.98px) {
+	.responsive-team-img {
+		width: 80px;
+		height: 80px;
+	}
+}
+@media (min-width: 376px) and (max-width: 1023.98px) {
+	.responsive-team-img {
+		width: 100px;
+		height: 100px;
+	}
+}
+@media (min-width: 1024px) {
+	.responsive-team-img {
+		width: 120px;
+		height: 120px;
+	}
+}
 @media (max-width: 1200px) {
 	footer .container-fluid.d-flex {
 		flex-direction: column !important;
